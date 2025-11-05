@@ -1,148 +1,155 @@
 import React, { useMemo, useState } from 'react';
-import { BookOpen, ChevronRight } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 
-const data = [
+const topics = [
   {
-    category: 'Wellness Guides',
-    description: 'Simple, science-backed tips to feel better every day.',
-    color: 'from-rose-500 to-pink-500',
-    subs: [
-      { title: 'Massage for Busy Parents', count: 8 },
-      { title: 'Stress Relief at Home', count: 12 },
-      { title: 'Understanding Muscle Tension', count: 5 },
-    ],
+    key: 'wellness',
+    title: 'Wellness Guides',
+    color: 'from-emerald-500 to-teal-600',
+    subcategories: ['Stress Relief', 'Sleep', 'Mindfulness', 'Self-care'],
+    featured: {
+      title: 'Daily rituals to unwind in 10 minutes',
+      excerpt: 'Short, family-friendly practices to reset your body and mind.',
+      image:
+        'https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=1600&auto=format&fit=crop',
+      url: '#',
+    },
   },
   {
-    category: 'Family & Kids',
-    description: 'Gentle care and routines that work for the whole family.',
-    color: 'from-sky-500 to-cyan-500',
-    subs: [
-      { title: 'First Massage for Kids', count: 6 },
-      { title: 'Prenatal & Postnatal Care', count: 7 },
-      { title: 'Soothing Bedtime Routines', count: 9 },
-    ],
+    key: 'family',
+    title: 'Family & Kids',
+    color: 'from-pink-500 to-rose-600',
+    subcategories: ['Prenatal', 'Postnatal', 'Kids Massage', 'Bonding'],
+    featured: {
+      title: 'Safe massage tips for kids at home',
+      excerpt: 'Gentle, expert-approved techniques to comfort little ones.',
+      image:
+        'https://images.unsplash.com/photo-1595433707802-6b2626ef057a?q=80&w=1600&auto=format&fit=crop',
+      url: '#',
+    },
   },
   {
-    category: 'Recovery & Performance',
-    description: 'Move better, recover faster, and feel stronger.',
-    color: 'from-violet-500 to-indigo-500',
-    subs: [
-      { title: 'Desk Posture Fixes', count: 10 },
-      { title: 'After-Workout Recovery', count: 11 },
-      { title: 'Neck & Back Care', count: 8 },
-    ],
+    key: 'recovery',
+    title: 'Recovery & Performance',
+    color: 'from-indigo-500 to-violet-600',
+    subcategories: ['Sports', 'Mobility', 'Pain Relief', 'Prehab'],
+    featured: {
+      title: 'Pre-race recovery checklist',
+      excerpt: 'Reduce soreness and bounce back faster with these steps.',
+      image:
+        'https://images.unsplash.com/photo-1558611848-73f7eb4001a1?q=80&w=1600&auto=format&fit=crop',
+      url: '#',
+    },
   },
 ];
 
-const Pill = ({ label, count }) => (
-  <button
-    className="group inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white/80 px-4 py-2 text-sm text-gray-700 hover:border-gray-300 hover:bg-white transition"
-    aria-label={`Open subcategory ${label}`}
-  >
-    <span>{label}</span>
-    <span className="text-xs text-gray-500">{count}</span>
-    <ChevronRight className="h-4 w-4 text-gray-400 group-hover:translate-x-0.5 transition-transform" />
-  </button>
-);
+export default function ArticleCategories() {
+  const [activeTopic, setActiveTopic] = useState(topics[0]);
+  const [activeSub, setActiveSub] = useState(topics[0].subcategories[0]);
 
-const CategoryCard = ({ category, description, color, subs, onSelect }) => (
-  <div className="relative overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-sm">
-    <div className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${color} opacity-10`} />
-    <div className="relative p-6">
-      <div className="flex items-center gap-3">
-        <div className={`h-10 w-10 rounded-xl bg-gradient-to-br ${color}`} />
-        <div>
-          <h3 className="text-lg font-semibold text-gray-900">{category}</h3>
-          <p className="text-sm text-gray-600">{description}</p>
-        </div>
-      </div>
-      <div className="mt-5 flex flex-wrap gap-2">
-        {subs.map((s) => (
-          <div key={s.title} onClick={() => onSelect(category, s.title)}>
-            <Pill label={s.title} count={s.count} />
-          </div>
-        ))}
-      </div>
-    </div>
-  </div>
-);
-
-const ArticleCategories = () => {
-  const [active, setActive] = useState(null);
   const headline = useMemo(() => {
-    if (!active) return 'Explore articles by topic';
-    return `${active.category} · ${active.sub}`;
-  }, [active]);
+    return `${activeTopic.title}: ${activeSub}`;
+  }, [activeTopic, activeSub]);
 
   return (
-    <section id="articles" className="py-16 sm:py-20 bg-gray-50">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
-          <div>
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-gray-900">
-              {headline}
-            </h2>
-            <p className="mt-3 text-gray-600">
-              Browse subcategories to find guides, tips, and expert answers tailored to your needs.
-            </p>
-          </div>
-          <div className="inline-flex items-center gap-2 rounded-full bg-white border border-gray-200 px-4 py-2 text-gray-700 shadow-sm">
-            <BookOpen className="h-4 w-4" />
-            <span className="text-sm">Knowledge Hub</span>
-          </div>
+    <section id="articles" className="relative mx-auto max-w-7xl px-6 py-16">
+      <div className="mb-8 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+        <div>
+          <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl">Articles & Guides</h2>
+          <p className="mt-2 max-w-2xl text-gray-600">
+            Explore expert advice for every stage of family life—from pregnancy to performance.
+          </p>
         </div>
-
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {data.map((c) => (
-            <CategoryCard
-              key={c.category}
-              {...c}
-              onSelect={(category, sub) => setActive({ category, sub })}
-            />
+        <div className="flex flex-wrap gap-2">
+          {topics.map((t) => (
+            <button
+              key={t.key}
+              onClick={() => {
+                setActiveTopic(t);
+                setActiveSub(t.subcategories[0]);
+              }}
+              className={`rounded-full px-4 py-2 text-sm font-medium shadow ring-1 transition ${
+                activeTopic.key === t.key
+                  ? 'bg-gray-900 text-white ring-gray-900'
+                  : 'bg-white text-gray-700 ring-gray-200 hover:bg-gray-50'
+              }`}
+            >
+              {t.title}
+            </button>
           ))}
         </div>
+      </div>
 
-        {active && (
-          <div className="mt-10 rounded-3xl border border-gray-100 bg-white p-6 shadow-sm">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-xl font-semibold text-gray-900">
-                  Featured in {active.sub}
-                </h3>
-                <p className="mt-1 text-sm text-gray-600">
-                  Curated reads to get you started. New articles added regularly.
-                </p>
-              </div>
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+        <div className="md:col-span-2">
+          <div className="mb-4 flex flex-wrap items-center gap-2">
+            {activeTopic.subcategories.map((s) => (
               <button
-                onClick={() => setActive(null)}
-                className="text-sm text-gray-500 hover:text-gray-700"
-                aria-label="Clear selection"
+                key={s}
+                onClick={() => setActiveSub(s)}
+                className={`rounded-full px-3 py-1 text-xs font-medium transition ${
+                  activeSub === s
+                    ? 'bg-emerald-600 text-white'
+                    : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
+                }`}
               >
-                Clear
+                {s}
               </button>
-            </div>
-            <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {[1, 2, 3].map((i) => (
-                <a
-                  key={i}
-                  href="#"
-                  className="group rounded-2xl border border-gray-100 p-4 hover:shadow-sm transition"
-                >
-                  <div className="text-xs text-gray-500">{active.category} · {active.sub}</div>
-                  <div className="mt-1 font-medium text-gray-900 group-hover:text-rose-600">
-                    How to get the most from your session ({i})
+            ))}
+          </div>
+          <div className="rounded-2xl bg-white/70 p-6 shadow-lg ring-1 ring-gray-200 backdrop-blur">
+            <div className={`inline-block rounded-full bg-gradient-to-r ${activeTopic.color} px-3 py-1 text-xs font-semibold text-white shadow`}>Featured</div>
+            <h3 className="mt-3 text-2xl font-semibold text-gray-900">{headline}</h3>
+            <p className="mt-1 text-gray-600">
+              Curated reads handpicked by our therapists to help you thrive.
+            </p>
+            <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <article key={i} className="group overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition hover:shadow-md">
+                  <div className="aspect-[16/9] w-full overflow-hidden">
+                    <img
+                      src={activeTopic.featured.image}
+                      alt="Featured"
+                      className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+                    />
                   </div>
-                  <div className="mt-2 text-sm text-gray-600 line-clamp-2">
-                    Practical steps you can try today to relieve tension, calm the body, and support recovery.
+                  <div className="p-4">
+                    <h4 className="line-clamp-2 font-semibold text-gray-900">
+                      {activeTopic.featured.title}
+                    </h4>
+                    <p className="mt-1 line-clamp-2 text-sm text-gray-600">
+                      {activeTopic.featured.excerpt}
+                    </p>
+                    <button className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-emerald-700 hover:underline">
+                      Read more <ChevronRight className="h-4 w-4" />
+                    </button>
                   </div>
-                </a>
+                </article>
               ))}
             </div>
           </div>
-        )}
+        </div>
+
+        <aside className="md:col-span-1">
+          <div className="sticky top-24 space-y-4">
+            <div className="rounded-2xl bg-gradient-to-br from-white to-emerald-50 p-6 shadow-lg ring-1 ring-emerald-100">
+              <h4 className="text-lg font-semibold text-gray-900">Why read our guides?</h4>
+              <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-gray-700">
+                <li>Therapist-reviewed advice</li>
+                <li>Family-friendly and practical</li>
+                <li>Grounded in recovery science</li>
+              </ul>
+            </div>
+            <div className="rounded-2xl bg-white p-6 shadow-lg ring-1 ring-gray-200">
+              <h4 className="text-lg font-semibold text-gray-900">Featured topic</h4>
+              <p className="mt-1 text-sm text-gray-600">
+                {activeTopic.title}
+              </p>
+              <div className={`mt-3 h-2 w-full rounded-full bg-gradient-to-r ${activeTopic.color}`} />
+            </div>
+          </div>
+        </aside>
       </div>
     </section>
   );
-};
-
-export default ArticleCategories;
+}

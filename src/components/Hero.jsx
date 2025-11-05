@@ -1,58 +1,55 @@
 import React from 'react';
 import Spline from '@splinetool/react-spline';
+import { Calendar, Phone } from 'lucide-react';
 
-const Hero = ({ onBookOnline, onBookWhatsApp }) => {
+const onlineBookingUrl = 'https://example.com/booking';
+const whatsappNumber = '1234567890';
+
+function openOnlineBooking() {
+  if (typeof window !== 'undefined') {
+    window.open(onlineBookingUrl, '_blank', 'noopener,noreferrer');
+  }
+}
+
+function openWhatsApp(message) {
+  const text = encodeURIComponent(message);
+  const url = `https://wa.me/${whatsappNumber}?text=${text}`;
+  if (typeof window !== 'undefined') {
+    window.open(url, '_blank', 'noopener,noreferrer');
+  }
+}
+
+export default function Hero() {
   return (
-    <section className="relative min-h-[72vh] md:min-h-[80vh] flex items-center overflow-hidden">
-      {/* 3D scene background */}
+    <section id="home" className="relative min-h-[80vh] w-full overflow-hidden bg-gradient-to-b from-emerald-50 via-white to-white">
       <div className="absolute inset-0">
-        <Spline
-          scene="https://prod.spline.design/vZX5NNlylxke-6DM/scene.splinecode"
-          style={{ width: '100%', height: '100%' }}
-        />
+        <Spline scene="https://prod.spline.design/6n1L6nXkGz2G7C8a/scene.splinecode" style={{ width: '100%', height: '100%' }} />
       </div>
-      {/* Soft gradient overlay that doesn't block interaction */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/70 via-white/40 to-rose-100/40" />
 
-      {/* Foreground content */}
-      <div className="relative mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-16 md:py-24">
-        <div className="grid md:grid-cols-2 gap-10 items-center">
-          <div className="backdrop-blur-[2px]">
-            <div className="inline-flex items-center gap-2 rounded-full border border-white/60 bg-white/70 px-3 py-1 text-xs text-gray-700 shadow-sm">
-              <span className="h-2 w-2 rounded-full bg-rose-600" />
-              Interactive Mascot · Follows your cursor
-            </div>
-            <h1 className="mt-4 text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-gray-900 leading-tight">
-              Family Massage & Wellness
-            </h1>
-            <p className="mt-5 text-lg text-gray-700 max-w-xl">
-              A playful, modern space where comfort meets care. Certified therapists, calm rooms, and transparent pricing for every family.
-            </p>
-            <div className="mt-8 flex flex-col sm:flex-row gap-3">
-              <button
-                onClick={onBookOnline}
-                className="inline-flex items-center justify-center rounded-full bg-rose-600 hover:bg-rose-700 text-white px-6 py-3 font-medium shadow-lg shadow-rose-600/20 transition"
-                aria-label="Book massage online"
-              >
-                Book Now
-              </button>
-              <button
-                onClick={onBookWhatsApp}
-                className="inline-flex items-center justify-center rounded-full bg-white ring-1 ring-gray-200 hover:bg-gray-50 text-gray-900 px-6 py-3 font-medium"
-                aria-label="Book via WhatsApp"
-              >
-                Book via WhatsApp
-              </button>
-            </div>
-            <div className="mt-6 text-sm text-gray-600">
-              Open daily • Family-friendly • Hygienic & safe
-            </div>
-          </div>
-          <div className="hidden md:block" />
+      {/* Soft gradient overlay that doesn't block interaction */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white/70 via-white/30 to-white/90" />
+
+      <div className="relative z-10 mx-auto flex max-w-7xl flex-col items-start gap-6 px-6 py-24 sm:py-28 md:py-32">
+        <span className="inline-flex items-center gap-2 rounded-full bg-white/70 px-3 py-1 text-xs font-medium text-emerald-700 shadow-sm ring-1 ring-emerald-200 backdrop-blur">
+          Family Massage • Wellness for everyone
+        </span>
+        <h1 className="text-4xl font-extrabold leading-tight text-gray-900 sm:text-5xl md:text-6xl">
+          Restore, relax, and reconnect
+          <span className="block bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent">with our family-friendly massage</span>
+        </h1>
+        <p className="max-w-2xl text-base text-gray-600 sm:text-lg">
+          Professional therapists, warm spaces, and tailored treatments for parents, kids, and athletes. Book online or message us to plan your perfect session.
+        </p>
+
+        <div className="flex flex-wrap items-center gap-3 pt-2">
+          <button onClick={openOnlineBooking} className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-5 py-3 text-white shadow-lg shadow-emerald-600/20 transition hover:bg-emerald-700">
+            <Calendar className="h-5 w-5" /> Book Online
+          </button>
+          <button onClick={() => openWhatsApp('Hello! I would like to book a massage.')} className="inline-flex items-center gap-2 rounded-lg bg-white px-5 py-3 text-emerald-700 shadow ring-1 ring-emerald-200 transition hover:bg-emerald-50">
+            <Phone className="h-5 w-5" /> WhatsApp Us
+          </button>
         </div>
       </div>
     </section>
   );
-};
-
-export default Hero;
+}

@@ -1,119 +1,115 @@
 import React, { useMemo, useState } from 'react';
+import { MapPin, Phone, Calendar } from 'lucide-react';
 
-const branchesData = [
+const branches = [
   {
-    city: 'Yogyakarta',
-    address: 'Jl. Malioboro No. 21, Yogyakarta',
-    hours: 'Mon–Sun, 10:00 – 22:00',
-    phone: '+62 812-3456-7890',
-    whatsapp: '6281234567890',
-    bookingUrl: 'https://example.com/book/yogyakarta',
-    mapQuery: 'Jl.+Malioboro+No.+21,+Yogyakarta',
+    city: 'Singapore',
+    name: 'Orchard Family Wellness',
+    address: '123 Orchard Rd, Singapore 238888',
+    map:
+      'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15955.153320680685!2d103.828!3d1.305!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31da199137fcb6d3%3A0x7a0dd1c9d2a3f2e!2sOrchard%20Rd!5e0!3m2!1sen!2ssg!4v1699999999999',
+    onlineUrl: 'https://example.com/booking?branch=orchard',
+    whatsapp: '6588001234',
   },
   {
-    city: 'Pati',
-    address: 'Jl. Raya Pati No. 8, Pati',
-    hours: 'Mon–Sun, 10:00 – 22:00',
-    phone: '+62 811-2233-4455',
-    whatsapp: '6281122334455',
-    bookingUrl: 'https://example.com/book/pati',
-    mapQuery: 'Jl.+Raya+Pati+No.+8,+Pati',
-  },
-  {
-    city: 'Semarang',
-    address: 'Jl. Pandanaran No. 88, Semarang',
-    hours: 'Mon–Sun, 10:00 – 22:00',
-    phone: '+62 813-9988-7766',
-    whatsapp: '6281399887766',
-    bookingUrl: 'https://example.com/book/semarang',
-    mapQuery: 'Jl.+Pandanaran+No.+88,+Semarang',
+    city: 'Kuala Lumpur',
+    name: 'Bangsar Family Wellness',
+    address: '45 Jalan Telawi, Bangsar, 59100 KL',
+    map:
+      'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.303665457399!2d101.668!3d3.128!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31cc4b1337b9b2f1%3A0x6b91e72e7c15c8c5!2sBangsar!5e0!3m2!1sen!2smy!4v1699999999999',
+    onlineUrl: 'https://example.com/booking?branch=bangsar',
+    whatsapp: '60123456789',
   },
 ];
 
-const BranchLocator = ({ onBookOnline, onBookWhatsApp }) => {
-  const [selectedCity, setSelectedCity] = useState(branchesData[0].city);
+function openOnline(url) {
+  if (typeof window !== 'undefined') {
+    window.open(url, '_blank', 'noopener,noreferrer');
+  }
+}
 
-  const selected = useMemo(
-    () => branchesData.find((b) => b.city === selectedCity) ?? branchesData[0],
-    [selectedCity]
-  );
+function openWhatsApp(number, message) {
+  const text = encodeURIComponent(message);
+  const url = `https://wa.me/${number}?text=${text}`;
+  if (typeof window !== 'undefined') {
+    window.open(url, '_blank', 'noopener,noreferrer');
+  }
+}
 
-  const openWhatsApp = () => {
-    const message = encodeURIComponent(
-      `Hello! I would like to book a massage at the ${selected.city} branch.`
-    );
-    window.open(`https://wa.me/${selected.whatsapp}?text=${message}`, '_blank');
-  };
-
-  const openOnlineBooking = () => {
-    window.open(selected.bookingUrl, '_blank');
-  };
+export default function BranchLocator() {
+  const [city, setCity] = useState(branches[0].city);
+  const branch = useMemo(() => branches.find((b) => b.city === city) || branches[0], [city]);
 
   return (
-    <section className="py-16 sm:py-20 bg-white">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
-          <div>
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-gray-900">
-              Find Your Nearest Branch
-            </h2>
-            <p className="mt-3 text-gray-600">Select a city to see address, hours, and contact.</p>
+    <section id="branches" className="mx-auto max-w-7xl px-6 py-16">
+      <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl">Find a Branch</h2>
+          <p className="mt-2 max-w-2xl text-gray-600">Select your city to view address, map, and booking options.</p>
+        </div>
+        <div>
+          <label className="sr-only" htmlFor="city">City</label>
+          <select
+            id="city"
+            value={city}
+            onChange={(e) => setCity(e.target.value)}
+            className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm shadow-sm focus:border-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-200"
+          >
+            {branches.map((b) => (
+              <option key={b.city} value={b.city}>{b.city}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <div className="overflow-hidden rounded-2xl bg-white shadow-lg ring-1 ring-gray-200">
+          <div className="p-6">
+            <div className="flex items-start justify-between">
+              <div>
+                <h3 className="text-xl font-semibold text-gray-900">{branch.name}</h3>
+                <p className="mt-1 flex items-center gap-2 text-gray-700"><MapPin className="h-4 w-4 text-emerald-600" /> {branch.address}</p>
+              </div>
+            </div>
+            <div className="mt-4 flex flex-wrap gap-3">
+              <button onClick={() => openOnline(branch.onlineUrl)} className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-white shadow hover:bg-emerald-700">
+                <Calendar className="h-5 w-5" /> Book Online
+              </button>
+              <button
+                onClick={() => openWhatsApp(branch.whatsapp, `Hello! I want to book at ${branch.name}.`)}
+                className="inline-flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-emerald-700 shadow ring-1 ring-emerald-200 hover:bg-emerald-50"
+              >
+                <Phone className="h-5 w-5" /> WhatsApp Branch
+              </button>
+            </div>
           </div>
-          <div className="flex gap-3">
-            <select
-              className="w-56 rounded-xl border border-gray-200 bg-white px-3 py-2 text-gray-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-rose-500"
-              value={selectedCity}
-              onChange={(e) => setSelectedCity(e.target.value)}
-              aria-label="Select a city"
-            >
-              {branchesData.map((b) => (
-                <option key={b.city} value={b.city}>
-                  {b.city}
-                </option>
-              ))}
-            </select>
+          <div className="h-[300px] w-full">
+            <iframe
+              title={`Map of ${branch.name}`}
+              src={branch.map}
+              width="100%"
+              height="100%"
+              style={{ border: 0 }}
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              allowFullScreen
+            />
           </div>
         </div>
 
-        <div className="mt-8 grid lg:grid-cols-2 gap-6">
-          <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
-            <div className="flex items-center justify-between gap-4">
-              <div>
-                <h3 className="text-xl font-semibold text-gray-900">{selected.city} Branch</h3>
-                <p className="mt-1 text-sm text-gray-600">{selected.address}</p>
-                <p className="mt-1 text-sm text-gray-600">Hours: {selected.hours}</p>
-                <p className="mt-1 text-sm text-gray-600">Phone: {selected.phone}</p>
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+          {branches.map((b) => (
+            <div key={b.city} className="rounded-2xl bg-white p-5 shadow-lg ring-1 ring-gray-200">
+              <h4 className="font-semibold text-gray-900">{b.name}</h4>
+              <p className="mt-1 text-sm text-gray-700">{b.address}</p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                <button onClick={() => openOnline(b.onlineUrl)} className="rounded-md bg-emerald-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-emerald-700">Book</button>
+                <button onClick={() => openWhatsApp(b.whatsapp, `Hi! Booking inquiry for ${b.name}.`)} className="rounded-md bg-white px-3 py-1.5 text-sm font-medium text-emerald-700 ring-1 ring-emerald-200 hover:bg-emerald-50">WhatsApp</button>
               </div>
             </div>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <button
-                onClick={openOnlineBooking}
-                className="inline-flex items-center justify-center rounded-full bg-rose-600 hover:bg-rose-700 text-white px-6 py-3 font-medium shadow-lg shadow-rose-600/20 transition"
-              >
-                Book This Branch
-              </button>
-              <button
-                onClick={openWhatsApp}
-                className="inline-flex items-center justify-center rounded-full bg-white ring-1 ring-gray-200 hover:bg-gray-50 text-gray-900 px-6 py-3 font-medium"
-              >
-                WhatsApp Booking
-              </button>
-            </div>
-          </div>
-
-          <div className="rounded-2xl overflow-hidden border border-gray-100 shadow-sm min-h-[320px] bg-gray-100">
-            <iframe
-              title={`Map of ${selected.city}`}
-              loading="lazy"
-              className="w-full h-[340px] md:h-[420px]"
-              referrerPolicy="no-referrer-when-downgrade"
-              src={`https://www.google.com/maps?q=${selected.mapQuery}&output=embed`}
-            />
-          </div>
+          ))}
         </div>
       </div>
     </section>
   );
-};
-
-export default BranchLocator;
+}
